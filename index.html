@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>kaleb.one</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Georgia&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg-start: #0f0c29;
+    --bg-mid: #1a1a3e;
+    --bg-end: #24243e;
+    --glass-bg: rgba(255, 255, 255, 0.06);
+    --glass-border: rgba(255, 255, 255, 0.12);
+    --glass-hover: rgba(255, 255, 255, 0.10);
+    --text-primary: rgba(255, 255, 255, 0.92);
+    --text-secondary: rgba(255, 255, 255, 0.55);
+    --text-tertiary: rgba(255, 255, 255, 0.35);
+    --accent-1: #a78bfa;
+    --accent-2: #60a5fa;
+    --accent-3: #34d399;
+    --accent-4: #f97316;
+    --accent-5: #f472b6;
+    --shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    --radius: 20px;
+  }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: linear-gradient(135deg, var(--bg-start), var(--bg-mid), var(--bg-end));
+    color: var(--text-primary);
+    min-height: 100vh;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Animated background orbs */
+  .bg-orbs {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+  .bg-orbs .orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.35;
+    animation: float 20s ease-in-out infinite;
+  }
+  .bg-orbs .orb:nth-child(1) {
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, #a78bfa, transparent 70%);
+    top: -10%; left: -10%;
+    animation-duration: 25s;
+  }
+  .bg-orbs .orb:nth-child(2) {
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, #60a5fa, transparent 70%);
+    bottom: -15%; right: -5%;
+    animation-duration: 30s;
+    animation-delay: -5s;
+  }
+  .bg-orbs .orb:nth-child(3) {
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, #34d399, transparent 70%);
+    top: 40%; right: 30%;
+    animation-duration: 22s;
+    animation-delay: -10s;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    25% { transform: translate(30px, -40px) scale(1.05); }
+    50% { transform: translate(-20px, 20px) scale(0.95); }
+    75% { transform: translate(15px, 35px) scale(1.02); }
+  }
+
+  .container {
+    position: relative;
+    z-index: 1;
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 60px 24px 80px;
+  }
+
+  /* Header */
+  .header {
+    text-align: center;
+    margin-bottom: 64px;
+  }
+
+  .header .domain {
+    font-family: 'Georgia', serif;
+    font-size: 3.5rem;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    background: linear-gradient(135deg, #fff 0%, rgba(255,255,255,0.7) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 12px;
+  }
+
+  .header .tagline {
+    font-size: 1.05rem;
+    font-weight: 300;
+    color: var(--text-secondary);
+    letter-spacing: 0.02em;
+  }
+
+  /* App Grid */
+  .app-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 24px;
+  }
+
+  /* Glass Card */
+  .app-card {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius);
+    padding: 32px 28px;
+    backdrop-filter: blur(20px) saturate(1.2);
+    -webkit-backdrop-filter: blur(20px) saturate(1.2);
+    box-shadow: var(--shadow);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .app-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, transparent 60%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .app-card:hover {
+    background: var(--glass-hover);
+    border-color: rgba(255, 255, 255, 0.2);
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4), 0 0 60px rgba(167, 139, 250, 0.08);
+  }
+
+  .app-card:hover::before {
+    opacity: 1;
+  }
+
+  /* Icon */
+  .app-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.6rem;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 1;
+  }
+
+  .app-card-body {
+    flex: 1;
+    position: relative;
+    z-index: 1;
+  }
+
+  .app-name {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 6px;
+    letter-spacing: -0.01em;
+  }
+
+  .app-desc {
+    font-size: 0.88rem;
+    font-weight: 300;
+    line-height: 1.55;
+    color: var(--text-secondary);
+  }
+
+  .app-url {
+    font-size: 0.78rem;
+    font-weight: 400;
+    color: var(--text-tertiary);
+    font-family: 'Inter', monospace;
+    letter-spacing: 0.01em;
+    margin-top: auto;
+    position: relative;
+    z-index: 1;
+  }
+
+  .app-card:hover .app-url {
+    color: var(--accent-1);
+  }
+
+  /* Status badge */
+  .status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.7rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 3px 8px;
+    border-radius: 6px;
+    position: relative;
+    z-index: 1;
+  }
+  .status-live {
+    background: rgba(52, 211, 153, 0.15);
+    color: #34d399;
+  }
+  .status-soon {
+    background: rgba(251, 191, 36, 0.15);
+    color: #fbbf24;
+  }
+  .status-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    display: inline-block;
+  }
+  .status-live .status-dot { background: #34d399; animation: pulse-live 2s ease-in-out infinite; }
+  .status-soon .status-dot { background: #fbbf24; }
+
+  @keyframes pulse-live {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  /* Footer */
+  .footer {
+    text-align: center;
+    margin-top: 64px;
+    color: var(--text-tertiary);
+    font-size: 0.82rem;
+    font-weight: 300;
+    letter-spacing: 0.02em;
+  }
+
+  /* Responsive */
+  @media (max-width: 640px) {
+    .header .domain { font-size: 2.4rem; }
+    .header { margin-bottom: 40px; }
+    .container { padding: 40px 16px 60px; }
+    .app-grid { gap: 16px; }
+    .app-card { padding: 24px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="bg-orbs">
+  <div class="orb"></div>
+  <div class="orb"></div>
+  <div class="orb"></div>
+</div>
+
+<div class="container">
+  <header class="header">
+    <h1 class="domain">kaleb.one</h1>
+    <p class="tagline">A personal constellation of tools, wikis, and kitchens.</p>
+  </header>
+
+  <div class="app-grid">
+
+    <a href="https://kitchen.kaleb.one" class="app-card" target="_self">
+      <div class="app-icon" style="background: linear-gradient(135deg, rgba(251,146,60,0.2), rgba(251,146,60,0.05));">🍳</div>
+      <div class="app-card-body">
+        <div class="app-name">Kitchen</div>
+        <div class="app-desc">Recipes, meal plans, and grocery lists. Home cooking with gout-friendly &amp; liver-friendly ratings.</div>
+        <div><span class="status-badge status-live"><span class="status-dot"></span>Live</span></div>
+      </div>
+      <div class="app-url">kitchen.kaleb.one</div>
+    </a>
+
+    <a href="https://masks.kaleb.one" class="app-card" target="_self">
+      <div class="app-icon" style="background: linear-gradient(135deg, rgba(167,139,250,0.2), rgba(167,139,250,0.05));">🎭</div>
+      <div class="app-card-body">
+        <div class="app-name">Masks Wiki</div>
+        <div class="app-desc">The Halden City encyclopedia. Lore, factions, characters, and worldbuilding for the masked city.</div>
+        <div><span class="status-badge status-live"><span class="status-dot"></span>Live</span></div>
+      </div>
+      <div class="app-url">masks.kaleb.one</div>
+    </a>
+
+    <a href="https://brain.kaleb.one" class="app-card" target="_self">
+      <div class="app-icon" style="background: linear-gradient(135deg, rgba(96,165,250,0.2), rgba(96,165,250,0.05));">🧠</div>
+      <div class="app-card-body">
+        <div class="app-name">Brain</div>
+        <div class="app-desc">Second brain vault. Notes, ideas, and knowledge graphs — the backbone behind everything.</div>
+        <div><span class="status-badge status-live"><span class="status-dot"></span>Live</span></div>
+      </div>
+      <div class="app-url">brain.kaleb.one</div>
+    </a>
+
+    <a href="#" class="app-card" style="opacity: 0.5; cursor: default;" onclick="return false">
+      <div class="app-icon" style="background: linear-gradient(135deg, rgba(244,114,182,0.2), rgba(244,114,182,0.05));">🌍</div>
+      <div class="app-card-body">
+        <div class="app-name">World</div>
+        <div class="app-desc">Worldbuilding hub. Maps, timelines, and interconnected narratives.</div>
+        <div><span class="status-badge status-soon"><span class="status-dot"></span>Coming Soon</span></div>
+      </div>
+      <div class="app-url">world.kaleb.one</div>
+    </a>
+
+  </div>
+
+  <footer class="footer">
+    <p>Handcrafted with care · Cloudflare Pages · Liquid Glass</p>
+  </footer>
+</div>
+
+</body>
+</html>
