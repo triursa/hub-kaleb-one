@@ -651,6 +651,239 @@
   .preview-panel::-webkit-scrollbar { width: 4px; }
   .preview-panel::-webkit-scrollbar-track { background: transparent; }
   .preview-panel::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 2px; }
+
+  /* ─── Context Menu ─── */
+  .context-menu {
+    position: fixed;
+    z-index: 1000;
+    min-width: 180px;
+    background: rgba(13, 11, 20, 0.96);
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    padding: 6px;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.5);
+    opacity: 0;
+    transform: scale(0.95) translateY(-4px);
+    transition: opacity 0.15s ease, transform 0.15s ease;
+    pointer-events: none;
+  }
+  .context-menu.visible {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+    pointer-events: auto;
+  }
+  .context-menu-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 14px;
+    border-radius: 8px;
+    font-size: 0.82rem;
+    font-weight: 400;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  .context-menu-item:hover {
+    background: var(--glass-hover);
+    color: var(--text-primary);
+  }
+  .context-menu-item .ctx-icon { font-size: 1rem; width: 20px; text-align: center; }
+  .context-menu-sep { height: 1px; background: rgba(255,255,255,0.06); margin: 4px 8px; }
+
+  /* ─── Modal ─── */
+  .modal-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 2000;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    opacity: 0;
+    transition: opacity 0.25s ease;
+    pointer-events: none;
+  }
+  .modal-backdrop.visible {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .modal {
+    position: fixed;
+    z-index: 2001;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.95);
+    min-width: 380px;
+    max-width: 480px;
+    background: rgba(13, 11, 20, 0.97);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    backdrop-filter: blur(30px);
+    -webkit-backdrop-filter: blur(30px);
+    padding: 28px;
+    box-shadow: 0 24px 80px rgba(0,0,0,0.6), 0 0 60px var(--accent-glow);
+    opacity: 0;
+    transition: opacity 0.25s ease, transform 0.25s ease;
+    pointer-events: none;
+  }
+  .modal.visible {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+    pointer-events: auto;
+  }
+  .modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  .modal-title {
+    font-family: 'Georgia', serif;
+    font-size: 1.3rem;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+  }
+  .modal-close {
+    width: 32px;
+    height: 32px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: 1px solid transparent;
+    color: var(--text-tertiary);
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  .modal-close:hover {
+    background: var(--glass-hover);
+    border-color: var(--glass-border);
+    color: var(--text-primary);
+  }
+  .modal-field {
+    margin-bottom: 16px;
+  }
+  .modal-field label {
+    display: block;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-tertiary);
+    margin-bottom: 6px;
+  }
+  .modal-field input, .modal-field select {
+    width: 100%;
+    padding: 10px 14px;
+    border-radius: 10px;
+    border: 1px solid var(--glass-border);
+    background: rgba(255,255,255,0.04);
+    color: var(--text-primary);
+    font-family: 'Inter', sans-serif;
+    font-size: 0.88rem;
+    outline: none;
+    transition: border-color 0.2s ease, background 0.2s ease;
+  }
+  .modal-field input:focus, .modal-field select:focus {
+    border-color: var(--accent);
+    background: rgba(255,255,255,0.06);
+  }
+  .modal-field input::placeholder { color: var(--text-tertiary); }
+  .modal-field select { cursor: pointer; }
+  .modal-field select option { background: #0d0b14; color: var(--text-primary); }
+  .modal-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    margin-top: 24px;
+  }
+  .modal-btn {
+    padding: 10px 22px;
+    border-radius: 10px;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: 1px solid var(--glass-border);
+    background: var(--glass-bg);
+    color: var(--text-secondary);
+    transition: all 0.15s ease;
+  }
+  .modal-btn:hover {
+    background: var(--glass-hover);
+    color: var(--text-primary);
+    border-color: rgba(255,255,255,0.15);
+  }
+  .modal-btn.primary {
+    background: var(--accent-dim);
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+  .modal-btn.primary:hover {
+    background: var(--accent);
+    color: var(--bg-deep);
+  }
+  .modal-btn.primary:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+  .modal-btn.primary:disabled:hover {
+    background: var(--accent-dim);
+    color: var(--accent);
+  }
+  .modal-status {
+    margin-top: 12px;
+    padding: 10px 14px;
+    border-radius: 10px;
+    font-size: 0.82rem;
+    display: none;
+  }
+  .modal-status.success {
+    display: block;
+    background: rgba(52,211,153,0.1);
+    border: 1px solid rgba(52,211,153,0.2);
+    color: #34d399;
+  }
+  .modal-status.error {
+    display: block;
+    background: rgba(239,68,68,0.1);
+    border: 1px solid rgba(239,68,68,0.2);
+    color: #f87171;
+  }
+  .modal-status.loading {
+    display: block;
+    background: var(--accent-dim);
+    border: 1px solid var(--accent);
+    color: var(--accent);
+  }
+
+  /* ─── Quick Add Badge on Sidebar ─── */
+  .sidebar-icon .quick-add-pip {
+    position: absolute;
+    top: 3px;
+    right: 3px;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 2px solid var(--bg-deep);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.55rem;
+    font-weight: 700;
+    color: var(--bg-deep);
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    pointer-events: none;
+  }
+  .sidebar-icon:hover .quick-add-pip {
+    opacity: 1;
+  }
 </style>
 </head>
 <body>
@@ -682,15 +915,17 @@
     <div class="sidebar-logo">k</div>
     <div class="sidebar-divider"></div>
 
-    <div class="sidebar-icon" data-domain="watch" data-accent="#fbbf24" data-accent-dim="rgba(251,191,36,0.15)" data-accent-glow="rgba(251,191,36,0.08)" data-href="https://watch.kaleb.one">
+    <div class="sidebar-icon" data-domain="watch" data-accent="#fbbf24" data-accent-dim="rgba(251,191,36,0.15)" data-accent-glow="rgba(251,191,36,0.08)" data-href="https://watch.kaleb.one" data-quickadd="watch">
       🎬
       <span class="tooltip">Watch</span>
       <span class="status-pip live"></span>
+      <span class="quick-add-pip">+</span>
     </div>
-    <div class="sidebar-icon" data-domain="kitchen" data-accent="#fb923c" data-accent-dim="rgba(251,146,60,0.15)" data-accent-glow="rgba(251,146,60,0.08)" data-href="https://kitchen.kaleb.one">
+    <div class="sidebar-icon" data-domain="kitchen" data-accent="#fb923c" data-accent-dim="rgba(251,146,60,0.15)" data-accent-glow="rgba(251,146,60,0.08)" data-href="https://kitchen.kaleb.one" data-quickadd="kitchen">
       👨‍🍳
       <span class="tooltip">Kitchen</span>
       <span class="status-pip live"></span>
+      <span class="quick-add-pip">+</span>
     </div>
     <div class="sidebar-icon" data-domain="masks" data-accent="#a78bfa" data-accent-dim="rgba(167,139,250,0.15)" data-accent-glow="rgba(167,139,250,0.08)" data-href="https://masks.kaleb.one">
       🎭
@@ -702,10 +937,11 @@
       <span class="tooltip">Brain</span>
       <span class="status-pip live"></span>
     </div>
-    <div class="sidebar-icon" data-domain="read" data-accent="#34d399" data-accent-dim="rgba(52,211,153,0.15)" data-accent-glow="rgba(52,211,153,0.08)" data-href="https://read.kaleb.one">
+    <div class="sidebar-icon" data-domain="read" data-accent="#34d399" data-accent-dim="rgba(52,211,153,0.15)" data-accent-glow="rgba(52,211,153,0.08)" data-href="https://read.kaleb.one" data-quickadd="read">
       📖
       <span class="tooltip">Read</span>
       <span class="status-pip live"></span>
+      <span class="quick-add-pip">+</span>
     </div>
     <div class="sidebar-icon" data-domain="world" data-accent="#f472b6" data-accent-dim="rgba(244,114,182,0.15)" data-accent-glow="rgba(244,114,182,0.08)" data-href="#">
       🌍
@@ -791,6 +1027,34 @@
       </div>
     </div>
 
+  </div>
+</div>
+
+<!-- Context Menu -->
+<div class="context-menu" id="contextMenu">
+  <div class="context-menu-item" id="ctxQuickAdd" data-action="quick-add">
+    <span class="ctx-icon">⚡</span> Quick Add
+  </div>
+  <div class="context-menu-sep"></div>
+  <div class="context-menu-item" data-action="launch">
+    <span class="ctx-icon">→</span> Launch Domain
+  </div>
+</div>
+
+<!-- Quick Add Modal -->
+<div class="modal-backdrop" id="modalBackdrop"></div>
+<div class="modal" id="quickAddModal">
+  <div class="modal-header">
+    <h3 class="modal-title" id="modalTitle">Add to Watch</h3>
+    <button class="modal-close" id="modalClose">✕</button>
+  </div>
+  <div id="modalBody">
+    <!-- Dynamic fields injected by JS -->
+  </div>
+  <div id="modalStatus" class="modal-status"></div>
+  <div class="modal-actions">
+    <button class="modal-btn" id="modalCancel">Cancel</button>
+    <button class="modal-btn primary" id="modalSubmit">Add</button>
   </div>
 </div>
 
@@ -1161,18 +1425,315 @@
   updateClock();
   setInterval(updateClock, 30000);
 
-  // Keyboard navigation
+  // ─── Quick Add System ───
+
+  const API_BASE = 'https://kaleb-one-api.kaleb-bays.workers.dev';
+  const contextMenu = document.getElementById('contextMenu');
+  const modalBackdrop = document.getElementById('modalBackdrop');
+  const quickAddModal = document.getElementById('quickAddModal');
+  const modalTitle = document.getElementById('modalTitle');
+  const modalBody = document.getElementById('modalBody');
+  const modalStatus = document.getElementById('modalStatus');
+  const modalSubmit = document.getElementById('modalSubmit');
+  const modalCancel = document.getElementById('modalCancel');
+  const modalClose = document.getElementById('modalClose');
+
+  let contextDomain = null; // domain key for the context menu
+
+  // Quick-add field definitions per domain
+  const quickAddFields = {
+    watch: {
+      title: 'Add to Watch',
+      types: [
+        { value: 'movie', label: '🎬 Movie' },
+        { value: 'tv', label: '📺 TV Show' },
+      ],
+      fields: [
+        { name: 'title', label: 'Title', type: 'text', placeholder: 'e.g. The Brutalist', required: true },
+        { name: 'year', label: 'Year (optional)', type: 'number', placeholder: '2024' },
+        { name: 'priority', label: 'Priority', type: 'select', options: [
+          { value: 'normal', label: 'Normal' },
+          { value: 'high', label: 'High' },
+          { value: 'low', label: 'Low' },
+        ], default: 'normal' },
+      ],
+    },
+    kitchen: {
+      title: 'Add Recipe',
+      types: [],
+      fields: [
+        { name: 'title', label: 'Recipe Name', type: 'text', placeholder: 'e.g. Garlic Butter Salmon', required: true },
+        { name: 'serves', label: 'Serves', type: 'number', placeholder: '2', default: '2' },
+        { name: 'gout_rating', label: 'Gout-Friendly', type: 'select', options: [
+          { value: '★★★★★', label: '★★★★★ Excellent' },
+          { value: '★★★★☆', label: '★★★★☆ Good' },
+          { value: '★★★☆☆', label: '★★★☆☆ Moderate' },
+          { value: '★★☆☆☆', label: '★★☆☆☆ Low' },
+          { value: '★☆☆☆☆', label: '★☆☆☆☆ Avoid' },
+        ], default: '★★★☆☆' },
+        { name: 'liver_rating', label: 'Liver-Friendly', type: 'select', options: [
+          { value: '★★★★★', label: '★★★★★ Excellent' },
+          { value: '★★★★☆', label: '★★★★☆ Good' },
+          { value: '★★★☆☆', label: '★★★☆☆ Moderate' },
+          { value: '★★☆☆☆', label: '★★☆☆☆ Low' },
+          { value: '★☆☆☆☆', label: '★☆☆☆☆ Avoid' },
+        ], default: '★★★☆☆' },
+      ],
+    },
+    read: {
+      title: 'Add Book',
+      types: [],
+      fields: [
+        { name: 'title', label: 'Book Title', type: 'text', placeholder: 'e.g. Dune', required: true },
+        { name: 'author', label: 'Author (optional)', type: 'text', placeholder: 'e.g. Frank Herbert' },
+        { name: 'priority', label: 'Priority', type: 'select', options: [
+          { value: 'normal', label: 'Normal' },
+          { value: 'high', label: 'High' },
+          { value: 'low', label: 'Low' },
+        ], default: 'normal' },
+      ],
+    },
+  };
+
+  // ─── Context menu ───
+
+  function showContextMenu(e, domain) {
+    e.preventDefault();
+    e.stopPropagation();
+    contextDomain = domain;
+
+    const hasQuickAdd = !!quickAddFields[domain];
+    document.getElementById('ctxQuickAdd').style.display = hasQuickAdd ? 'flex' : 'none';
+
+    // Position
+    const x = Math.min(e.clientX, window.innerWidth - 200);
+    const y = Math.min(e.clientY, window.innerHeight - 120);
+    contextMenu.style.left = x + 'px';
+    contextMenu.style.top = y + 'px';
+    contextMenu.classList.add('visible');
+  }
+
+  function hideContextMenu() {
+    contextMenu.classList.remove('visible');
+  }
+
+  // Right-click on sidebar icons
+  sidebarIcons.forEach(icon => {
+    icon.addEventListener('contextmenu', (e) => {
+      if (icon.dataset.quickadd) {
+        showContextMenu(e, icon.dataset.domain);
+      }
+    });
+
+    // Click the + pip to open quick-add directly
+    const pip = icon.querySelector('.quick-add-pip');
+    if (pip) {
+      pip.addEventListener('click', (e) => {
+        e.stopPropagation();
+        hideContextMenu();
+        openQuickAdd(icon.dataset.domain);
+      });
+    }
+  });
+
+  // Context menu actions
+  contextMenu.addEventListener('click', (e) => {
+    const item = e.target.closest('.context-menu-item');
+    if (!item) return;
+    const action = item.dataset.action;
+    hideContextMenu();
+
+    if (action === 'quick-add' && contextDomain) {
+      openQuickAdd(contextDomain);
+    } else if (action === 'launch' && contextDomain) {
+      const href = document.querySelector(`.sidebar-icon[data-domain="${contextDomain}"]`)?.dataset.href;
+      if (href && href !== '#') window.location.href = href;
+    }
+  });
+
+  // Dismiss context menu on click elsewhere
+  document.addEventListener('click', (e) => {
+    if (!contextMenu.contains(e.target)) hideContextMenu();
+  });
+
+  // ─── Quick-add modal ───
+
+  function openQuickAdd(domain) {
+    const config = quickAddFields[domain];
+    if (!config) return;
+
+    // Set accent for modal
+    const icon = document.querySelector(`.sidebar-icon[data-domain="${domain}"]`);
+    if (icon) {
+      quickAddModal.style.boxShadow = `0 24px 80px rgba(0,0,0,0.6), 0 0 60px ${icon.dataset.accentGlow}`;
+      modalSubmit.style.background = icon.dataset.accentDim;
+      modalSubmit.style.borderColor = icon.dataset.accent;
+      modalSubmit.style.color = icon.dataset.accent;
+    }
+
+    modalTitle.textContent = config.title;
+    modalStatus.className = 'modal-status';
+    modalStatus.textContent = '';
+    modalSubmit.disabled = false;
+    modalSubmit.textContent = 'Add';
+
+    // Build form HTML
+    let html = '';
+
+    // Type selector (for watch domain: movie vs tv)
+    if (config.types.length > 0) {
+      html += `<div class="modal-field">
+        <label>Type</label>
+        <select name="type" id="qa-type">
+          ${config.types.map(t => `<option value="${t.value}">${t.label}</option>`).join('')}
+        </select>
+      </div>`;
+    }
+
+    // Fields
+    config.fields.forEach(f => {
+      if (f.type === 'select') {
+        html += `<div class="modal-field">
+          <label>${f.label}</label>
+          <select name="${f.name}" id="qa-${f.name}">
+            ${f.options.map(o => `<option value="${o.value}" ${o.value === f.default ? 'selected' : ''}>${o.label}</option>`).join('')}
+          </select>
+        </div>`;
+      } else {
+        html += `<div class="modal-field">
+          <label>${f.label}${f.required ? ' *' : ''}</label>
+          <input type="${f.type}" name="${f.name}" id="qa-${f.name}" placeholder="${f.placeholder || ''}" ${f.required ? 'required' : ''} value="${f.default || ''}" />
+        </div>`;
+      }
+    });
+
+    modalBody.innerHTML = html;
+
+    // Show modal
+    modalBackdrop.classList.add('visible');
+    quickAddModal.classList.add('visible');
+
+    // Focus first input
+    setTimeout(() => {
+      const firstInput = modalBody.querySelector('input:not([type="hidden"])');
+      if (firstInput) firstInput.focus();
+    }, 100);
+  }
+
+  function closeModal() {
+    modalBackdrop.classList.remove('visible');
+    quickAddModal.classList.remove('visible');
+  }
+
+  modalClose.addEventListener('click', closeModal);
+  modalCancel.addEventListener('click', closeModal);
+  modalBackdrop.addEventListener('click', closeModal);
+
+  // Submit quick-add
+  modalSubmit.addEventListener('click', async () => {
+    const domain = contextDomain || activeDomain;
+    const config = quickAddFields[domain];
+    if (!config) return;
+
+    // Collect form data
+    const data = {};
+    config.fields.forEach(f => {
+      const el = document.getElementById(`qa-${f.name}`);
+      if (el) data[f.name] = el.value;
+    });
+
+    // For watch domain, add the type
+    const typeEl = document.getElementById('qa-type');
+    if (typeEl) data._type = typeEl.value;
+
+    // Validate required fields
+    const missing = config.fields.filter(f => f.required && !data[f.name]?.trim());
+    if (missing.length > 0) {
+      modalStatus.className = 'modal-status error';
+      modalStatus.textContent = `Required: ${missing.map(f => f.label).join(', ')}`;
+      return;
+    }
+
+    // Show loading
+    modalSubmit.disabled = true;
+    modalStatus.className = 'modal-status loading';
+    modalStatus.textContent = 'Adding…';
+
+    try {
+      let endpoint;
+      if (domain === 'watch') {
+        endpoint = data._type === 'tv' ? '/api/add/tv' : '/api/add/movie';
+        delete data._type;
+      } else if (domain === 'kitchen') {
+        endpoint = '/api/add/recipe';
+      } else if (domain === 'read') {
+        endpoint = '/api/add/book';
+      }
+
+      const res = await fetch(`${API_BASE}${endpoint}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+
+      const result = await res.json();
+
+      if (res.ok && result.success) {
+        modalStatus.className = 'modal-status success';
+        const summary = [];
+        if (result.title) summary.push(result.title);
+        if (result.year) summary.push(`(${result.year})`);
+        if (result.genre) summary.push(`— ${result.genre}`);
+        if (result.imdbScore) summary.push(`| ${result.imdbScore}/10`);
+        if (result.streaming) summary.push(`| ${result.streaming}`);
+        modalStatus.textContent = `✓ Added: ${summary.join(' ')}`;
+        modalSubmit.textContent = 'Done';
+        setTimeout(closeModal, 2000);
+      } else {
+        modalStatus.className = 'modal-status error';
+        modalStatus.textContent = result.error || 'Unknown error';
+        modalSubmit.disabled = false;
+      }
+    } catch (err) {
+      modalStatus.className = 'modal-status error';
+      modalStatus.textContent = `Network error: ${err.message}`;
+      modalSubmit.disabled = false;
+    }
+  });
+
+  // ─── Keyboard navigation ───
+
   document.addEventListener('keydown', (e) => {
     const keys = ['watch', 'kitchen', 'masks', 'brain', 'read', 'world'];
     const num = parseInt(e.key);
+
+    // Close modal on Escape
+    if (e.key === 'Escape') {
+      if (quickAddModal.classList.contains('visible')) {
+        closeModal();
+        return;
+      }
+      hideContextMenu();
+      deselectDomain();
+    }
+
     if (num >= 1 && num <= keys.length) {
       selectDomain(keys[num - 1]);
     }
-    if (e.key === 'Escape') {
-      deselectDomain();
+
+    // Submit modal on Enter (if input is focused)
+    if (e.key === 'Enter' && quickAddModal.classList.contains('visible')) {
+      const active = document.activeElement;
+      if (active && (active.tagName === 'INPUT' || active.tagName === 'SELECT')) {
+        modalSubmit.click();
+        return;
+      }
     }
+
     if (e.key === 'Enter' && activeDomain && domains[activeDomain]?.status === 'live') {
-      window.location.href = domains[activeDomain].href;
+      if (!quickAddModal.classList.contains('visible')) {
+        window.location.href = domains[activeDomain].href;
+      }
     }
   });
 </script>
