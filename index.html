@@ -889,6 +889,146 @@
   .sidebar-icon .quick-add-pip:hover {
     transform: scale(1.2);
   }
+
+  /* ─── Typeahead Dropdown ─── */
+  .typeahead-wrapper {
+    position: relative;
+  }
+  .typeahead-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    margin-top: 4px;
+    background: rgba(13, 11, 20, 0.98);
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    padding: 6px;
+    max-height: 320px;
+    overflow-y: auto;
+    z-index: 100;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.5);
+    opacity: 0;
+    transform: translateY(-4px);
+    transition: opacity 0.15s ease, transform 0.15s ease;
+    pointer-events: none;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255,255,255,0.08) transparent;
+  }
+  .typeahead-dropdown.open {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+  .typeahead-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.12s ease;
+  }
+  .typeahead-item:hover, .typeahead-item.highlighted {
+    background: var(--glass-hover);
+  }
+  .typeahead-poster {
+    width: 36px;
+    height: 54px;
+    border-radius: 6px;
+    object-fit: cover;
+    flex-shrink: 0;
+    background: rgba(255,255,255,0.05);
+  }
+  .typeahead-poster-placeholder {
+    width: 36px;
+    height: 54px;
+    border-radius: 6px;
+    background: rgba(255,255,255,0.05);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+  }
+  .typeahead-info {
+    flex: 1;
+    min-width: 0;
+  }
+  .typeahead-title {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.3;
+  }
+  .typeahead-meta {
+    font-size: 0.72rem;
+    color: var(--text-tertiary);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .typeahead-meta .rating {
+    color: #fbbf24;
+  }
+  .typeahead-empty {
+    padding: 16px;
+    text-align: center;
+    font-size: 0.82rem;
+    color: var(--text-tertiary);
+  }
+  .typeahead-loading {
+    padding: 16px;
+    text-align: center;
+    font-size: 0.82rem;
+    color: var(--accent);
+  }
+  .typeahead-loading .spinner {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border: 2px solid var(--accent-dim);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+    vertical-align: middle;
+    margin-right: 8px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Selected badge */
+  .selected-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    border-radius: 8px;
+    background: var(--accent-dim);
+    border: 1px solid var(--accent);
+    font-size: 0.82rem;
+    color: var(--accent);
+    margin-top: 4px;
+  }
+  .selected-badge img {
+    width: 24px;
+    height: 36px;
+    border-radius: 4px;
+    object-fit: cover;
+  }
+  .selected-badge .clear-selection {
+    cursor: pointer;
+    opacity: 0.6;
+    transition: opacity 0.15s;
+    margin-left: 4px;
+  }
+  .selected-badge .clear-selection:hover {
+    opacity: 1;
+  }
 </style>
 </head>
 <body>
@@ -1448,6 +1588,101 @@
   const modalClose = document.getElementById('modalClose');
 
   let contextDomain = null; // domain key for the context menu
+  let selectedResult = null; // selected typeahead result
+  let searchTimer = null; // debounce timer
+
+  // ─── Typeahead search ───
+
+  function debounceSearch(fn, delay = 350) {
+    return function(...args) {
+      clearTimeout(searchTimer);
+      searchTimer = setTimeout(() => fn.apply(this, args), delay);
+    };
+  }
+
+  async function fetchSearchResults(query, type) {
+    if (!query || query.length < 2) return [];
+    try {
+      const res = await fetch(`${API_BASE}/api/search/${type}?q=${encodeURIComponent(query)}`);
+      if (!res.ok) return [];
+      const data = await res.json();
+      return data.results || [];
+    } catch {
+      return [];
+    }
+  }
+
+  function renderTypeaheadItems(results, type) {
+    const dropdown = document.getElementById('qa-dropdown');
+    if (!dropdown) return;
+
+    if (results.length === 0) {
+      dropdown.innerHTML = `<div class="typeahead-empty">No results found</div>`;
+      return;
+    }
+
+    dropdown.innerHTML = results.map((r, i) => {
+      const posterHtml = r.poster
+        ? `<img class="typeahead-poster" src="${r.poster}" alt="" loading="lazy" />`
+        : r.thumbnail
+          ? `<img class="typeahead-poster" src="${r.thumbnail}" alt="" loading="lazy" />`
+          : `<div class="typeahead-poster-placeholder">${type === 'book' ? '📖' : '🎬'}</div>`;
+      const metaParts = [];
+      if (r.year) metaParts.push(r.year);
+      if (r.rating) metaParts.push(`<span class="rating">★ ${r.rating}</span>`);
+      if (r.authors) metaParts.push(r.authors);
+      const meta = metaParts.join(' · ');
+
+      return `<div class="typeahead-item" data-index="${i}" data-id="${r.id}" data-title="${(r.title || '').replace(/"/g, '&quot;')}" data-year="${r.year || ''}" data-type="${r.type}">
+        ${posterHtml}
+        <div class="typeahead-info">
+          <div class="typeahead-title">${r.title}</div>
+          <div class="typeahead-meta">${meta}</div>
+        </div>
+      </div>`;
+    }).join('');
+
+    dropdown.classList.add('open');
+  }
+
+  function selectTypeaheadItem(el) {
+    const id = el.dataset.id;
+    const title = el.dataset.title;
+    const year = el.dataset.year;
+    const type = el.dataset.type;
+
+    const titleInput = document.getElementById('qa-title');
+    const yearInput = document.getElementById('qa-year');
+    const authorInput = document.getElementById('qa-author');
+    const dropdown = document.getElementById('qa-dropdown');
+
+    if (titleInput) titleInput.value = title;
+    if (yearInput) yearInput.value = year;
+
+    // Store the result for the add call
+    selectedResult = { id, title, year, type };
+
+    // For books, extract author from the meta text and populate hidden field
+    if (type === 'book') {
+      const metaEl = el.querySelector('.typeahead-meta');
+      const authorText = metaEl?.textContent?.split('·')?.pop()?.trim();
+      if (authorText && authorInput) authorInput.value = authorText;
+      selectedResult.authors = authorText;
+    }
+
+    // Close dropdown
+    if (dropdown) dropdown.classList.remove('open');
+
+    // Show selected badge
+    const badge = document.getElementById('qa-selected-badge');
+    if (badge) {
+      const posterImg = el.querySelector('img');
+      badge.innerHTML = posterImg
+        ? `<img src="${posterImg.src}" alt="" /> <span>${title}${year ? ` (${year})` : ''}</span> <span class="clear-selection">✕</span>`
+        : `<span>${title}${year ? ` (${year})` : ''}</span> <span class="clear-selection">✕</span>`;
+      badge.style.display = 'inline-flex';
+    }
+  }
 
   // Quick-add field definitions per domain
   const quickAddFields = {
@@ -1458,8 +1693,9 @@
         { value: 'tv', label: '📺 TV Show' },
       ],
       fields: [
-        { name: 'title', label: 'Title', type: 'text', placeholder: 'e.g. The Brutalist', required: true },
-        { name: 'year', label: 'Year (optional)', type: 'number', placeholder: '2024' },
+        { name: 'title', label: 'Title', type: 'text', placeholder: 'Search for a movie or show…', required: true, typeahead: true },
+        { name: 'year', label: 'Year', type: 'hidden' },
+        { name: 'tmdb_id', label: 'TMDB ID', type: 'hidden' },
         { name: 'priority', label: 'Priority', type: 'select', options: [
           { value: 'normal', label: 'Normal' },
           { value: 'high', label: 'High' },
@@ -1493,8 +1729,8 @@
       title: 'Add Book',
       types: [],
       fields: [
-        { name: 'title', label: 'Book Title', type: 'text', placeholder: 'e.g. Dune', required: true },
-        { name: 'author', label: 'Author (optional)', type: 'text', placeholder: 'e.g. Frank Herbert' },
+        { name: 'title', label: 'Book Title', type: 'text', placeholder: 'Search for a book…', required: true, typeahead: 'book' },
+        { name: 'author', label: 'Author', type: 'text', placeholder: 'e.g. Frank Herbert', hidden: true },
         { name: 'priority', label: 'Priority', type: 'select', options: [
           { value: 'normal', label: 'Normal' },
           { value: 'high', label: 'High' },
@@ -1571,6 +1807,9 @@
     const config = quickAddFields[domain];
     if (!config) return;
 
+    // Reset state
+    selectedResult = null;
+
     // Set accent for modal
     const icon = document.querySelector(`.sidebar-icon[data-domain="${domain}"]`);
     if (icon) {
@@ -1601,12 +1840,31 @@
 
     // Fields
     config.fields.forEach(f => {
-      if (f.type === 'select') {
+      if (f.type === 'hidden') {
+        html += `<input type="hidden" name="${f.name}" id="qa-${f.name}" value="${f.default || ''}" />`;
+      } else if (f.type === 'select') {
         html += `<div class="modal-field">
           <label>${f.label}</label>
           <select name="${f.name}" id="qa-${f.name}">
             ${f.options.map(o => `<option value="${o.value}" ${o.value === f.default ? 'selected' : ''}>${o.label}</option>`).join('')}
           </select>
+        </div>`;
+      } else if (f.typeahead) {
+        // Typeahead search field
+        const searchType = f.typeahead === 'book' ? 'book' : 'movie';
+        html += `<div class="modal-field">
+          <label>${f.label}${f.required ? ' *' : ''}</label>
+          <div class="typeahead-wrapper">
+            <input type="text" name="${f.name}" id="qa-${f.name}" placeholder="${f.placeholder || ''}" ${f.required ? 'required' : ''} autocomplete="off" data-search-type="${searchType}" />
+            <div class="typeahead-dropdown" id="qa-dropdown"></div>
+          </div>
+          <div class="selected-badge" id="qa-selected-badge" style="display:none;"></div>
+        </div>`;
+      } else if (f.hidden) {
+        // Hidden on initial render, can be shown via fallback
+        html += `<div class="modal-field" id="qa-field-${f.name}" style="display:none;">
+          <label>${f.label}${f.required ? ' *' : ''}</label>
+          <input type="${f.type}" name="${f.name}" id="qa-${f.name}" placeholder="${f.placeholder || ''}" />
         </div>`;
       } else {
         html += `<div class="modal-field">
@@ -1618,20 +1876,126 @@
 
     modalBody.innerHTML = html;
 
+    // Wire up typeahead search
+    const titleInput = document.getElementById('qa-title');
+    if (titleInput && titleInput.dataset.searchType) {
+      const searchType = titleInput.dataset.searchType;
+
+      const doSearch = debounceSearch(async (query) => {
+        const dropdown = document.getElementById('qa-dropdown');
+        if (!dropdown) return;
+        if (query.length < 2) {
+          dropdown.classList.remove('open');
+          return;
+        }
+
+        dropdown.innerHTML = `<div class="typeahead-loading"><span class="spinner"></span>Searching…</div>`;
+        dropdown.classList.add('open');
+
+        // For watch, need to get the current type (movie/tv)
+        let apiType = searchType;
+        const typeEl = document.getElementById('qa-type');
+        if (typeEl) apiType = typeEl.value;
+
+        const res = await fetch(`${API_BASE}/api/search/${apiType}?q=${encodeURIComponent(query)}`);
+        let data;
+        try { data = await res.json(); } catch { data = { results: [] }; }
+
+        // Handle fallback (e.g. Google Books quota exceeded)
+        if (data.fallback) {
+          dropdown.innerHTML = `<div class="typeahead-empty">Search unavailable — enter details manually</div>`;
+          // Show hidden fields (e.g. author for books)
+          document.querySelectorAll('.modal-field[id^="qa-field-"]').forEach(el => el.style.display = '');
+          return;
+        }
+
+        const results = data.results || [];
+        renderTypeaheadItems(results, apiType);
+      }, 350);
+
+      titleInput.addEventListener('input', (e) => {
+        if (selectedResult) {
+          // User is typing again after a selection — reset
+          selectedResult = null;
+          const badge = document.getElementById('qa-selected-badge');
+          if (badge) badge.style.display = 'none';
+        }
+        doSearch(e.target.value);
+      });
+
+      // Arrow keys + Enter navigation in dropdown
+      titleInput.addEventListener('keydown', (e) => {
+        const dropdown = document.getElementById('qa-dropdown');
+        if (!dropdown || !dropdown.classList.contains('open')) return;
+
+        const items = dropdown.querySelectorAll('.typeahead-item');
+        const highlighted = dropdown.querySelector('.typeahead-item.highlighted');
+        let idx = highlighted ? parseInt(highlighted.dataset.index) : -1;
+
+        if (e.key === 'ArrowDown') {
+          e.preventDefault();
+          idx = Math.min(idx + 1, items.length - 1);
+          items.forEach(i => i.classList.remove('highlighted'));
+          if (items[idx]) items[idx].classList.add('highlighted');
+        } else if (e.key === 'ArrowUp') {
+          e.preventDefault();
+          idx = Math.max(idx - 1, 0);
+          items.forEach(i => i.classList.remove('highlighted'));
+          if (items[idx]) items[idx].classList.add('highlighted');
+        } else if (e.key === 'Enter' && idx >= 0 && items[idx]) {
+          e.preventDefault();
+          selectTypeaheadItem(items[idx]);
+        } else if (e.key === 'Escape') {
+          dropdown.classList.remove('open');
+        }
+      });
+
+      // Click on item in dropdown
+      modalBody.addEventListener('click', (e) => {
+        const item = e.target.closest('.typeahead-item');
+        if (item) selectTypeaheadItem(item);
+      });
+
+      // Clear selected badge
+      modalBody.addEventListener('click', (e) => {
+        if (e.target.classList.contains('clear-selection')) {
+          selectedResult = null;
+          const badge = document.getElementById('qa-selected-badge');
+          if (badge) badge.style.display = 'none';
+          if (titleInput) { titleInput.value = ''; titleInput.focus(); }
+          const yearInput = document.getElementById('qa-year');
+          if (yearInput) yearInput.value = '';
+        }
+      });
+
+      // When type changes (movie ↔ tv), re-search
+      const typeEl = document.getElementById('qa-type');
+      if (typeEl) {
+        typeEl.addEventListener('change', () => {
+          if (titleInput.value.length >= 2) {
+            doSearch(titleInput.value);
+          }
+        });
+      }
+    }
+
     // Show modal
     modalBackdrop.classList.add('visible');
     quickAddModal.classList.add('visible');
 
-    // Focus first input
+    // Focus first text input
     setTimeout(() => {
-      const firstInput = modalBody.querySelector('input:not([type="hidden"])');
-      if (firstInput) firstInput.focus();
+      if (titleInput) titleInput.focus();
     }, 100);
   }
 
   function closeModal() {
     modalBackdrop.classList.remove('visible');
     quickAddModal.classList.remove('visible');
+    // Clean up typeahead
+    const dropdown = document.getElementById('qa-dropdown');
+    if (dropdown) dropdown.classList.remove('open');
+    clearTimeout(searchTimer);
   }
 
   modalClose.addEventListener('click', closeModal);
@@ -1654,6 +2018,19 @@
     // For watch domain, add the type
     const typeEl = document.getElementById('qa-type');
     if (typeEl) data._type = typeEl.value;
+
+    // If a typeahead result was selected, include its ID for direct lookup
+    if (selectedResult) {
+      if (selectedResult.type === 'movie' || selectedResult.type === 'tv') {
+        data.tmdb_id = selectedResult.id;
+      } else if (selectedResult.type === 'book') {
+        data.google_books_id = selectedResult.id;
+        // Also set author from search result if available
+        if (selectedResult.authors && !data.author) {
+          data.author = selectedResult.authors;
+        }
+      }
+    }
 
     // Validate required fields
     const missing = config.fields.filter(f => f.required && !data[f.name]?.trim());
