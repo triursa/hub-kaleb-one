@@ -78,6 +78,8 @@
   .bg-ambient[data-domain="world"]  { background: radial-gradient(ellipse at 30% 30%, rgba(244,114,182,0.12) 0%, transparent 55%),
                                                  radial-gradient(ellipse at 70% 70%, rgba(236,72,153,0.06) 0%, transparent 55%); }
   .bg-ambient[data-domain="music"]  { background: radial-gradient(ellipse at 40% 20%, rgba(236,72,153,0.15) 0%, transparent 55%),
+  .bg-ambient[data-domain="projects"] { background: radial-gradient(ellipse at 25% 35%, rgba(16,185,129,0.14) 0%, transparent 55%),
+                                                 radial-gradient(ellipse at 75% 65%, rgba(59,130,246,0.08) 0%, transparent 55%); }
                                                  radial-gradient(ellipse at 60% 80%, rgba(168,85,247,0.08) 0%, transparent 55%); }
 
   /* Floating particles */
@@ -1045,6 +1047,7 @@
   <div class="bg-ambient" data-domain="read"></div>
   <div class="bg-ambient" data-domain="world"></div>
   <div class="bg-ambient" data-domain="music"></div>
+  <div class="bg-ambient" data-domain="projects"></div>
   <div class="particles">
     <div class="particle visible"></div>
     <div class="particle visible"></div>
@@ -1102,6 +1105,11 @@
       <span class="status-pip live"></span>
     </div>
 
+    <div class="sidebar-icon" data-domain="projects" data-accent="#10b981" data-accent-dim="rgba(16,185,129,0.15)" data-accent-glow="rgba(16,185,129,0.08)" data-href="https://projects.kaleb.one">
+      📋
+      <span class="tooltip">Projects</span>
+      <span class="status-pip live"></span>
+    </div>
     <div class="sidebar-spacer"></div>
   </nav>
 
@@ -1124,7 +1132,7 @@
     <div class="default-view" id="defaultView">
       <h1 class="default-title">kaleb.one</h1>
       <p class="default-subtitle">A personal constellation of tools, wikis, and kitchens.</p>
-      <p class="default-hint"><span class="arrow-left">←</span> Select a domain to explore · Press <kbd style="background: rgba(255,255,255,0.08); padding: 2px 6px; border-radius: 4px; font-size: 0.72rem; border: 1px solid rgba(255,255,255,0.1);">1</kbd>-<kbd style="background: rgba(255,255,255,0.08); padding: 2px 6px; border-radius: 4px; font-size: 0.72rem; border: 1px solid rgba(255,255,255,0.1);">7</kbd> · <kbd style="background: rgba(255,255,255,0.08); padding: 2px 6px; border-radius: 4px; font-size: 0.72rem; border: 1px solid rgba(255,255,255,0.1);">n</kbd> to quick-add</p>
+      <p class="default-hint"><span class="arrow-left">←</span> Select a domain to explore · Press <kbd style="background: rgba(255,255,255,0.08); padding: 2px 6px; border-radius: 4px; font-size: 0.72rem; border: 1px solid rgba(255,255,255,0.1);">1</kbd>-<kbd style="background: rgba(255,255,255,0.08); padding: 2px 6px; border-radius: 4px; font-size: 0.72rem; border: 1px solid rgba(255,255,255,0.1);">8</kbd> · <kbd style="background: rgba(255,255,255,0.08); padding: 2px 6px; border-radius: 4px; font-size: 0.72rem; border: 1px solid rgba(255,255,255,0.1);">n</kbd> to quick-add</p>
     </div>
 
     <!-- Domain View (appears on selection) -->
@@ -1402,6 +1410,38 @@
       bars: [20, 30, 15, 25, 35, 10, 40, 20, 30, 15],
       heroGradient: 'linear-gradient(135deg, rgba(244,114,182,0.14) 0%, rgba(236,72,153,0.06) 50%, rgba(190,24,93,0.03) 100%)'
     },
+    projects: {
+      name: 'Projects',
+      desc: 'Project management with Gantt timelines, Kanban boards, milestones, and task tracking.',
+      href: 'https://projects.kaleb.one',
+      status: 'live',
+      stats: [
+        { value: '1', label: 'Active' },
+        { value: '5', label: 'Milestones' },
+        { value: '0%', label: 'Complete' }
+      ],
+      recent: {
+        title: 'Active Projects',
+        count: 1,
+        items: [
+          { icon: '🖥️', text: 'Gaming Streaming Rig', meta: 'Active' },
+          { icon: '⚙️', text: 'Hardware Setup', meta: 'Setup' },
+          { icon: '🌐', text: 'Network Bridge', meta: 'Networking' },
+          { icon: '🎮', text: 'Game Testing', meta: 'Testing' },
+          { icon: '✅', text: 'Optimization', meta: 'Final' }
+        ]
+      },
+      info: {
+        title: 'Features',
+        items: [
+          { icon: '📊', text: 'Gantt chart timelines' },
+          { icon: '📋', text: 'Kanban board view' },
+          { icon: '🔒', text: 'Access protected' }
+        ]
+      },
+      bars: [30, 60, 45, 75, 55, 40, 80, 50, 65, 70],
+      heroGradient: 'linear-gradient(135deg, rgba(16,185,129,0.18) 0%, rgba(59,130,246,0.10) 50%, rgba(139,92,246,0.04) 100%)'
+    },
     music: {
       name: 'Music',
       desc: 'Spotify dashboard with live now-playing, top tracks, heavy rotation, and vault-synced listening history.',
@@ -1433,6 +1473,38 @@
       },
       bars: [80, 65, 90, 75, 55, 85, 70, 95, 60, 80],
       heroGradient: 'linear-gradient(135deg, rgba(236,72,153,0.18) 0%, rgba(168,85,247,0.10) 50%, rgba(244,114,182,0.04) 100%)'
+    },
+    projects: {
+      name: 'Projects',
+      desc: 'Project management with Gantt timelines, Kanban boards, milestones, and task tracking.',
+      href: 'https://projects.kaleb.one',
+      status: 'live',
+      stats: [
+        { value: '1', label: 'Active' },
+        { value: '5', label: 'Milestones' },
+        { value: '0%', label: 'Complete' }
+      ],
+      recent: {
+        title: 'Active Projects',
+        count: 1,
+        items: [
+          { icon: '🖥️', text: 'Gaming Streaming Rig', meta: 'Active' },
+          { icon: '⚙️', text: 'Hardware Setup', meta: 'Setup' },
+          { icon: '🌐', text: 'Network Bridge', meta: 'Networking' },
+          { icon: '🎮', text: 'Game Testing', meta: 'Testing' },
+          { icon: '✅', text: 'Optimization', meta: 'Final' }
+        ]
+      },
+      info: {
+        title: 'Features',
+        items: [
+          { icon: '📊', text: 'Gantt chart timelines' },
+          { icon: '📋', text: 'Kanban board view' },
+          { icon: '🔒', text: 'Access protected' }
+        ]
+      },
+      bars: [30, 60, 45, 75, 55, 40, 80, 50, 65, 70],
+      heroGradient: 'linear-gradient(135deg, rgba(16,185,129,0.18) 0%, rgba(59,130,246,0.10) 50%, rgba(139,92,246,0.04) 100%)'
     }
   };
 
@@ -2149,7 +2221,7 @@
   // ─── Keyboard navigation ───
 
   document.addEventListener('keydown', (e) => {
-    const keys = ['watch', 'kitchen', 'masks', 'brain', 'read', 'world', 'music'];
+    const keys = ['watch', 'kitchen', 'masks', 'brain', 'read', 'world', 'music', 'projects'];
     const num = parseInt(e.key);
 
     // Close modal on Escape
