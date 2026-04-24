@@ -1910,7 +1910,7 @@
     }
 
     // Close dropdown
-    if (dropdown) dropdown.classList.remove('open');
+    closeTypeaheadDropdown();
 
     // Show selected badge
     const badge = document.getElementById('qa-selected-badge');
@@ -1920,6 +1920,15 @@
         ? `<img src="${posterImg.src}" alt="" /> <span>${title}${year ? ` (${year})` : ''}</span> <span class="clear-selection">✕</span>`
         : `<span>${title}${year ? ` (${year})` : ''}</span> <span class="clear-selection">✕</span>`;
       badge.style.display = 'inline-flex';
+    }
+  }
+
+  function closeTypeaheadDropdown() {
+    const dropdown = document.getElementById('qa-dropdown');
+    if (dropdown) {
+      dropdown.classList.remove('open');
+      const wrapper = dropdown.closest('.typeahead-wrapper');
+      if (wrapper) wrapper.setAttribute('aria-expanded', 'false');
     }
   }
 
@@ -2124,12 +2133,14 @@
         const dropdown = document.getElementById('qa-dropdown');
         if (!dropdown) return;
         if (query.length < 2) {
-          dropdown.classList.remove('open');
+          closeTypeaheadDropdown();
           return;
         }
 
         dropdown.innerHTML = `<div class="typeahead-loading"><span class="spinner"></span>Searching…</div>`;
         dropdown.classList.add('open');
+        const wrapper = dropdown.closest('.typeahead-wrapper');
+        if (wrapper) wrapper.setAttribute('aria-expanded', 'true');
 
         // For watch, need to get the current type (movie/tv)
         let apiType = searchType;
@@ -2185,7 +2196,7 @@
           e.preventDefault();
           selectTypeaheadItem(items[idx]);
         } else if (e.key === 'Escape') {
-          dropdown.classList.remove('open');
+          closeTypeaheadDropdown();
         }
       });
 
@@ -2232,8 +2243,7 @@
     modalBackdrop.classList.remove('visible');
     quickAddModal.classList.remove('visible');
     // Clean up typeahead
-    const dropdown = document.getElementById('qa-dropdown');
-    if (dropdown) dropdown.classList.remove('open');
+    closeTypeaheadDropdown();
     clearTimeout(searchTimer);
   }
 
