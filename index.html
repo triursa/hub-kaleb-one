@@ -1979,15 +1979,6 @@
     },
   };
 
-  function closeTypeaheadDropdown() {
-    const dropdown = document.getElementById('qa-dropdown');
-    if (dropdown) {
-      dropdown.classList.remove('open');
-      const wrapper = dropdown.closest('.typeahead-wrapper');
-      if (wrapper) wrapper.setAttribute('aria-expanded', 'false');
-    }
-  }
-
   // ─── Context menu ───
 
   function showContextMenu(e, domain) {
