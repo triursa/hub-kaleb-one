@@ -87,6 +87,9 @@
   .bg-ambient[data-domain="craft"] { background: radial-gradient(ellipse at 25% 35%, rgba(245,158,11,0.14) 0%, transparent 55%),
                                                  radial-gradient(ellipse at 75% 65%, rgba(217,119,6,0.08) 0%, transparent 55%),
                                                  radial-gradient(ellipse at 60% 80%, rgba(234,88,12,0.06) 0%, transparent 55%); }
+  .bg-ambient[data-domain="opencode"] { background: radial-gradient(ellipse at 30% 25%, rgba(99,102,241,0.16) 0%, transparent 55%),
+                                                 radial-gradient(ellipse at 70% 70%, rgba(168,85,247,0.10) 0%, transparent 55%),
+                                                 radial-gradient(ellipse at 50% 85%, rgba(79,70,229,0.06) 0%, transparent 55%); }
 
   /* Floating particles */
   .particles {
@@ -1056,6 +1059,7 @@
   <div class="bg-ambient" data-domain="projects"></div>
   <div class="bg-ambient" data-domain="flow"></div>
   <div class="bg-ambient" data-domain="craft"></div>
+  <div class="bg-ambient" data-domain="opencode"></div>
   <div class="particles">
     <div class="particle visible"></div>
     <div class="particle visible"></div>
@@ -1126,6 +1130,11 @@
     <div class="sidebar-icon" data-domain="craft" data-accent="#f59e0b" data-accent-dim="rgba(245,158,11,0.15)" data-accent-glow="rgba(245,158,11,0.08)" data-href="https://craft.kaleb.one">
       🛠️
       <span class="tooltip">Craft</span>
+      <span class="status-pip live"></span>
+    </div>
+    <div class="sidebar-icon" data-domain="opencode" data-accent="#6366f1" data-accent-dim="rgba(99,102,241,0.15)" data-accent-glow="rgba(99,102,241,0.08)" data-href="https://opencode.kaleb.one">
+      💻
+      <span class="tooltip">OpenCode</span>
       <span class="status-pip live"></span>
     </div>
     <div class="sidebar-spacer"></div>
@@ -1587,6 +1596,38 @@
       },
       bars: [85, 70, 90, 60, 80, 55, 75, 65, 95, 45],
       heroGradient: 'linear-gradient(135deg, rgba(245,158,11,0.18) 0%, rgba(217,119,6,0.10) 50%, rgba(234,88,12,0.04) 100%)'
+    },
+    opencode: {
+      name: 'OpenCode',
+      desc: 'Self-hosted AI coding assistant. Run powerful LLMs in your browser with OpenCode — private, fast, and fully under your control.',
+      href: 'https://opencode.kaleb.one',
+      status: 'live',
+      stats: [
+        { value: '∞', label: 'Models' },
+        { value: '1', label: 'Instance' },
+        { value: '🔒', label: 'Private' }
+      ],
+      recent: {
+        title: 'Capabilities',
+        count: 5,
+        items: [
+          { icon: '🤖', text: 'Multi-model support', meta: 'LLMs' },
+          { icon: '🔒', text: 'Self-hosted & private', meta: 'Security' },
+          { icon: '⚡', text: 'Browser-based inference', meta: 'Speed' },
+          { icon: '🛠️', text: 'Code generation & review', meta: 'DevTools' },
+          { icon: '🌐', text: 'Access protected', meta: 'Auth' }
+        ]
+      },
+      info: {
+        title: 'Quick Info',
+        items: [
+          { icon: '🔐', text: 'Access protected' },
+          { icon: '🖥️', text: 'Browser-based AI code assistant' },
+          { icon: '🔑', text: 'Self-hosted instance' }
+        ]
+      },
+      bars: [75, 90, 60, 85, 70, 55, 80, 95, 65, 50],
+      heroGradient: 'linear-gradient(135deg, rgba(99,102,241,0.20) 0%, rgba(168,85,247,0.12) 50%, rgba(79,70,229,0.05) 100%)'
     }
   };
 
@@ -2303,7 +2344,7 @@
   // ─── Keyboard navigation ───
 
   document.addEventListener('keydown', (e) => {
-    const keys = ['watch', 'kitchen', 'masks', 'brain', 'read', 'world', 'music', 'projects', 'flow', 'craft'];
+    const keys = ['watch', 'kitchen', 'masks', 'brain', 'read', 'world', 'music', 'projects', 'flow', 'craft', 'opencode'];
     const num = parseInt(e.key);
 
     // Close modal on Escape
